@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserJob;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Response;
 use App\Models\User;
 
-class UserController extends Controller
+class User1Controller extends Controller
 {
     use ApiResponser;
     private $request;
@@ -20,6 +19,7 @@ class UserController extends Controller
             'username' => 'required|max:20',
             'password' => 'required|max:20',
             'gender' => 'required|in:Male,Female',
+            'jobid' => 'required|numeric|min:1|not_in:0',
         ];
     }
     public function getUsers()
@@ -38,14 +38,14 @@ class UserController extends Controller
         return $this->successResponse($users);
     }
     /**
-     * Add a new user
+     * Add a new job
      * @return \Illuminate\Http\JsonResponse
      */
-
     public function add(Request $request)
     {
-        $userjob = UserJob::findOrFail($request->jobid);
+
         $this->validate($request, $this->rules);
+
         $user = User::create($request->all());
         return $this->successResponse($user, Response::HTTP_CREATED);
     }
@@ -58,17 +58,6 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         return $this->successResponse($user);
-        // old code
-        /*
-$user = User::where('userid', $id)->first();
-if($user){
-return $this->successResponse($user);
-}
-{
-return $this->errorResponse('User ID Does Not Exists',
-Response::HTTP_NOT_FOUND);
-}
-*/
     }
     /**
      * Update an existing author
